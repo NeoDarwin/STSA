@@ -1,0 +1,145 @@
+'Acces interdit aux personnes non autorisees'
+SW2>
+SW2>
+SW2>
+SW2>
+SW2>
+SW2>
+SW2>
+SW2>show vlan
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Gi0/1, Gi0/2
+10   PROD                             active
+20   ADMIN                            active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+                                                Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10
+30   RD                               active    Fa0/11, Fa0/12, Fa0/13, Fa0/14
+                                                Fa0/15
+40   SERVEURS                         active    Fa0/16, Fa0/17, Fa0/18, Fa0/19
+                                                Fa0/20
+99   MGMT                             active
+666  PARKING                          active    Fa0/21, Fa0/22, Fa0/23, Fa0/24
+999  NATIVE                           active
+1002 fddi-default                     act/unsup
+1003 token-ring-default               act/unsup
+1004 fddinet-default                  act/unsup
+1005 trnet-default                    act/unsup
+
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+1    enet  100001     1500  -      -      -        -    -        0      0
+10   enet  100010     1500  -      -      -        -    -        0      0
+20   enet  100020     1500  -      -      -        -    -        0      0
+30   enet  100030     1500  -      -      -        -    -        0      0
+40   enet  100040     1500  -      -      -        -    -        0      0
+99   enet  100099     1500  -      -      -        -    -        0      0
+666  enet  100666     1500  -      -      -        -    -        0      0
+999  enet  100999     1500  -      -      -        -    -        0      0
+1002 fddi  101002     1500  -      -      -        -    -        0      0
+1003 tr    101003     1500  -      -      -        -    -        0      0
+1004 fdnet 101004     1500  -      -      -        ieee -        0      0
+1005 trnet 101005     1500  -      -      -        ibm  -        0      0
+
+Remote SPAN VLANs
+------------------------------------------------------------------------------
+
+
+Primary Secondary Type              Ports
+------- --------- ----------------- ------------------------------------------
+
+SW2>enable
+Password:
+SW2#config ter
+Enter configuration commands, one per line.  End with CNTL/Z.
+SW2(config)#no pi domain-lookup
+                ^
+% Invalid input detected at '^' marker.
+
+SW2(config)#no ip domain-lookup
+SW2(config)#banner motd #'Acces interdit aux personnes non autorisees'#
+SW2(config)#service password-encryption
+SW2(config)#vlan 10
+SW2(config-vlan)#name PROD
+SW2(config-vlan)#vlan 20
+SW2(config-vlan)#name ADMIN
+SW2(config-vlan)#vlan 30
+SW2(config-vlan)#name RD
+SW2(config-vlan)#vlan 40
+SW2(config-vlan)#name SERVEURS
+SW2(config-vlan)#vlan 99
+SW2(config-vlan)#name MGMT
+SW2(config-vlan)#vlan 666
+SW2(config-vlan)#name PARKING
+SW2(config-vlan)#vlan 999
+SW2(config-vlan)#name NATIVE
+SW2(config-vlan)#exit
+SW2(config)#interface range fa0/1 - 15
+SW2(config-if-range)#switchport mode access
+SW2(config-if-range)#switchport access vlan 10
+SW2(config-if-range)#interface range fa0/16 - 20
+SW2(config-if-range)#switchport mode access
+SW2(config-if-range)#switchport access vlan 20
+SW2(config-if-range)#interface range fa0/21 - 24, Gi0/2
+SW2(config-if-range)#switchport mode access
+SW2(config-if-range)#switchport access vlan 666
+SW2(config-if-range)#shutdown
+SW2(config-if-range)#
+*Mar  1 00:47:43.526: %LINK-5-CHANGED: Interface GigabitEthernet0/2, changed state to administratively down
+SW2(config-if-range)#interface gi0/1
+SW2(config-if)#switchport mode trunk
+SW2(config-if)#switchport trunk native vlan 999
+SW2(config-if)#switchport trunk allowed vlan 10,20,30,40,99
+SW2(config-if)#no shutdown
+SW2(config-if)#end
+SW2#
+*Mar  1 00:49:22.235: %SYS-5-CONFIG_I: Configured from console by console
+SW2#write memory
+Building configuration...
+[OK]
+SW2#show vlan
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Gi0/1
+10   PROD                             active    Fa0/1, Fa0/2, Fa0/3, Fa0/4
+                                                Fa0/5, Fa0/6, Fa0/7, Fa0/8
+                                                Fa0/9, Fa0/10, Fa0/11, Fa0/12
+                                                Fa0/13, Fa0/14, Fa0/15
+20   ADMIN                            active    Fa0/16, Fa0/17, Fa0/18, Fa0/19
+                                                Fa0/20
+30   RD                               active
+40   SERVEURS                         active
+99   MGMT                             active
+666  PARKING                          active    Fa0/21, Fa0/22, Fa0/23, Fa0/24
+                                                Gi0/2
+999  NATIVE                           active
+1002 fddi-default                     act/unsup
+1003 token-ring-default               act/unsup
+1004 fddinet-default                  act/unsup
+1005 trnet-default                    act/unsup
+
+VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
+---- ----- ---------- ----- ------ ------ -------- ---- -------- ------ ------
+1    enet  100001     1500  -      -      -        -    -        0      0
+10   enet  100010     1500  -      -      -        -    -        0      0
+20   enet  100020     1500  -      -      -        -    -        0      0
+30   enet  100030     1500  -      -      -        -    -        0      0
+40   enet  100040     1500  -      -      -        -    -        0      0
+99   enet  100099     1500  -      -      -        -    -        0      0
+666  enet  100666     1500  -      -      -        -    -        0      0
+999  enet  100999     1500  -      -      -        -    -        0      0
+1002 fddi  101002     1500  -      -      -        -    -        0      0
+1003 tr    101003     1500  -      -      -        -    -        0      0
+1004 fdnet 101004     1500  -      -      -        ieee -        0      0
+1005 trnet 101005     1500  -      -      -        ibm  -        0      0
+
+Remote SPAN VLANs
+------------------------------------------------------------------------------
+
+
+Primary Secondary Type              Ports
+------- --------- ----------------- ------------------------------------------
+
+SW2#
