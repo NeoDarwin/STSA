@@ -1,0 +1,125 @@
+R1#show running-config
+Building configuration...
+
+Current configuration : 1806 bytes
+!
+! Last configuration change at 10:48:51 UTC Wed Nov 25 2026
+!
+version 15.5
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname R1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+ethernet lmi ce
+memory-size iomem 15
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+multilink bundle-name authenticated
+!
+!
+!
+!
+license udi pid CISCO2911/K9 sn FGL16231131
+license accept end user agreement
+license boot module c2900 technology-package securityk9 disable
+license boot module c2900 technology-package uck9 disable
+license boot module c2900 technology-package datak9 disable
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+interface Embedded-Service-Engine0/0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/1.10
+ encapsulation dot1Q 10
+ ip address 172.16.10.1 255.255.255.192
+!
+interface GigabitEthernet0/1.20
+ encapsulation dot1Q 20
+ ip address 172.16.10.65 255.255.255.224
+!
+interface GigabitEthernet0/1.30
+ encapsulation dot1Q 30
+ ip address 172.16.10.97 255.255.255.240
+!
+interface GigabitEthernet0/1.40
+ encapsulation dot1Q 40
+ ip address 172.16.10.113 255.255.255.248
+!
+interface GigabitEthernet0/1.99
+ encapsulation dot1Q 99
+ ip address 172.16.10.121 255.255.255.248
+!
+interface GigabitEthernet0/2
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+line con 0
+line aux 0
+line 2
+ no activation-character
+ no exec
+ transport preferred none
+ transport output pad telnet rlogin lapb-ta mop udptn v120 ssh
+ stopbits 1
+line vty 0 4
+ login
+ transport input none
+!
+scheduler allocate 20000 1000
+!
+end
