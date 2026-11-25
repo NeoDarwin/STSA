@@ -1,0 +1,209 @@
+sh vlan brief : 
+SW2#sh vlan brief
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active
+10   PROD                             active    Gi0/1, Gi0/2, Gi0/3, Gi0/4
+                                                Gi0/5, Gi0/6, Gi0/7, Gi0/8
+                                                Gi0/9, Gi0/10, Gi0/11, Gi0/12
+                                                Gi0/13, Gi0/14, Gi0/15
+20   ADMIN                            active    Gi0/16, Gi0/17, Gi0/18, Gi0/19
+                                                Gi0/20
+99   MGMT                             active    Gi0/24
+999  NATIVE                           active
+1002 fddi-default                     act/unsup
+1003 token-ring-default               act/unsup
+1004 fddinet-default                  act/unsup
+1005 trnet-default                    act/unsup
+
+sh run : 
+SW2#sh run
+Building configuration...
+
+Current configuration : 3407 bytes
+!
+version 12.2
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname SW2
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$WC4s$Z9iZv5P2/nwWosryT1mbB0
+!
+!
+!
+no aaa new-model
+system mtu routing 1500
+authentication mac-move permit
+ip subnet-zero
+!
+!
+no ip domain-lookup
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree etherchannel guard misconfig
+spanning-tree extend system-id
+!
+!
+!
+!
+vlan internal allocation policy ascending
+!
+!
+!
+interface FastEthernet0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet0/1
+ switchport access vlan 10
+ switchport mode access
+!
+interface GigabitEthernet0/2
+ switchport access vlan 10
+ switchport mode access
+!
+interface GigabitEthernet0/3
+ switchport access vlan 10
+ switchport mode access
+!
+interface GigabitEthernet0/4
+ switchport access vlan 10
+ switchport mode access
+!
+interface GigabitEthernet0/5
+ switchport access vlan 10
+ switchport mode access
+!
+interface GigabitEthernet0/6
+ switchport access vlan 10
+ switchport mode access
+!
+interface GigabitEthernet0/7
+ switchport access vlan 10
+ switchport mode access
+!
+interface GigabitEthernet0/8
+ switchport access vlan 10
+ switchport mode access
+!
+interface GigabitEthernet0/9
+ switchport access vlan 10
+ switchport mode access
+!
+interface GigabitEthernet0/10
+ switchport access vlan 10
+ switchport mode access
+!
+interface GigabitEthernet0/11
+ switchport access vlan 10
+ switchport mode access
+!
+interface GigabitEthernet0/12
+ switchport access vlan 10
+ switchport mode access
+!
+interface GigabitEthernet0/13
+ switchport access vlan 10
+ switchport mode access
+!
+interface GigabitEthernet0/14
+ switchport access vlan 10
+ switchport mode access
+!
+interface GigabitEthernet0/15
+ switchport access vlan 10
+ switchport mode access
+!
+interface GigabitEthernet0/16
+ switchport access vlan 20
+ switchport mode access
+!
+interface GigabitEthernet0/17
+ switchport access vlan 20
+ switchport mode access
+!
+interface GigabitEthernet0/18
+ switchport access vlan 20
+ switchport mode access
+!
+interface GigabitEthernet0/19
+ switchport access vlan 20
+ switchport mode access
+!
+interface GigabitEthernet0/20
+ switchport access vlan 20
+ switchport mode access
+!
+interface GigabitEthernet0/21
+ switchport access vlan 666
+ switchport mode access
+ shutdown
+!
+interface GigabitEthernet0/22
+ switchport access vlan 666
+ switchport mode access
+ shutdown
+!
+interface GigabitEthernet0/23
+ switchport access vlan 666
+ switchport mode access
+ shutdown
+!
+interface GigabitEthernet0/24
+ switchport access vlan 99
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,30,40,99
+ switchport mode access
+!
+interface GigabitEthernet1/1
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,30,40,99
+!
+interface GigabitEthernet1/2
+!
+interface GigabitEthernet1/3
+!
+interface GigabitEthernet1/4
+!
+interface TenGigabitEthernet1/1
+!
+interface TenGigabitEthernet1/2
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ ip address 172.16.10.1 255.255.255.192
+!
+interface Vlan20
+ ip address 172.16.10.66 255.255.255.224
+!
+interface Vlan99
+ ip address 172.16.10.124 255.255.255.248
+!
+interface Vlan666
+ no ip address
+!
+ip http server
+ip http secure-server
+!
+banner motd ^C
+ACCES RESTRAINT TOUTE TENTATIVE D'ACCES EST INTERDITE
+^C
+!
+line con 0
+line vty 5 15
+!
+end
