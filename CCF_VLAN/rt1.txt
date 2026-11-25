@@ -1,0 +1,100 @@
+ROUTEUR 1
+
+R1#show running-config
+!
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R1
+!
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+no ip domain lookup
+ip domain name aqualys.local
+!
+ip dhcp excluded-address 172.16.10.1 172.16.10.9
+ip dhcp excluded-address 172.16.10.65
+ip dhcp excluded-address 172.16.10.97
+!
+ip dhcp pool PROD
+ network 172.16.10.0 255.255.255.192
+ default-router 172.16.10.1
+ dns-server 172.16.10.114
+ip dhcp pool ADMIN
+ network 172.16.10.64 255.255.255.224
+ default-router 172.16.10.65
+ dns-server 172.16.10.114
+ip dhcp pool RD
+ network 172.16.10.96 255.255.255.240
+ default-router 172.16.10.97
+ dns-server 172.16.10.114
+!
+username admin privilege 15 secret 5 $1$mERr$9cTjUIEqNGurQiFYpEXx11
+!
+ip ssh version 2
+!
+interface GigabitEthernet0/0
+ description Trunk vers SW1 Gi0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0.10
+ description PROD
+ encapsulation dot1Q 10
+ ip address 172.16.10.1 255.255.255.192
+ ip access-group ACL_PROD_IN in
+!
+interface GigabitEthernet0/0.20
+ description ADMIN
+ encapsulation dot1Q 20
+ ip address 172.16.10.65 255.255.255.224
+!
+interface GigabitEthernet0/0.30
+ description RD
+ encapsulation dot1Q 30
+ ip address 172.16.10.97 255.255.255.240
+!
+interface GigabitEthernet0/0.40
+ description SERVEURS
+ encapsulation dot1Q 40
+ ip address 172.16.10.113 255.255.255.248
+!
+interface GigabitEthernet0/0.99
+ description MGMT
+ encapsulation dot1Q 99
+ ip address 172.16.10.121 255.255.255.248
+ ip access-group ACL_MGMT_OUT out
+!
+! Optionnel, seulement si le lien FAI est câblé :
+interface GigabitEthernet0/1
+ description WAN vers FAI
+ ip address 172.16.10.129 255.255.255.252
+!
+ip access-list extended ACL_PROD_IN
+ permit udp any eq bootpc any eq bootps
+ permit icmp 172.16.10.0 0.0.0.63 host 172.16.10.1 echo
+ permit ip 172.16.10.0 0.0.0.63 172.16.10.112 0.0.0.7
+ deny   ip 172.16.10.0 0.0.0.63 172.16.10.64 0.0.0.31
+ deny   ip 172.16.10.0 0.0.0.63 172.16.10.96 0.0.0.15
+ deny   ip 172.16.10.0 0.0.0.63 172.16.10.120 0.0.0.7
+ permit ip any any
+!
+ip access-list extended ACL_MGMT_OUT
+ permit tcp 172.16.10.96 0.0.0.15 172.16.10.120 0.0.0.7 eq 22
+ permit icmp 172.16.10.96 0.0.0.15 172.16.10.120 0.0.0.7 echo
+ deny   ip any 172.16.10.120 0.0.0.7
+ permit ip any any
+!
+banner motd ^C
+ACCES RESERVE AUX PERSONNES AUTORISEES - AQUALYS. Toute connexion non autorisee est interdite et sera poursuivie.
+^C
+!
+line con 0
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+!
+end
